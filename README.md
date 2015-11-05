@@ -9,6 +9,7 @@ NOTE: This project is still in early development and may change core functionali
 ## Requirements
 
 PostgreSQL 9.4+ (requires jsonb type and related functions)
+
 pgcrypto contrib module (for use in generating UUIDs)
 
 ## Installation
