@@ -1,0 +1,47 @@
+{
+    "name": "pg_docs_api",
+    "abstract": "Extension to give a document storage api to postgres",
+    "version": "0.1.0",
+    "maintainer": [ 
+        "Rob Conery <rob@wekeroad.com>",
+        "Keith Fiske <keith@keithf4.com>"
+    ],
+    "license": "postgresql",
+    "generated_by": "Keith Fiske",
+    "release_status": "testing",
+    "prereqs": {
+        "runtime": {
+            "requires": {
+                "PostgreSQL": "9.4.0"
+            }
+        }
+    },
+    "provides": {
+        "pg_docs_api": {
+            "file": "sql/pg_docs_api--0.1.0.sql",
+            "docfile": "README.md",
+            "version": "0.1.0",
+            "abstract": "Extension to give a document storage api to postgres"
+        }
+    },
+    "resources": {
+        "bugtracker": {
+            "web": "https://github.com/robconery/pg_docs_api/issues"
+        },
+        "repository": {
+            "url": "git://github.com/robconery/pg_docs_api.git" ,
+            "web": "https://github.com/robconery/pg_docs_api",
+            "type": "git"
+        }
+    },    
+    "meta-spec": {
+      "version": "1.0.0",
+      "url": "http://pgxn.org/meta/spec.txt"
+    },
+    "tags": [
+        "document",
+        "json",
+        "jsonb",
+        "mongodb"
+    ]
+}
