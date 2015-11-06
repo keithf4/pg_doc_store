@@ -59,9 +59,9 @@ Triggers:
  * Save a jsonb document to the given table.
  * If the table does not exist already, it will be created
  * If an "id" key is given in the document, it will be set as the primary key value
- * If the given "id" primary key already exists, it will update that row with the given document
- * If the given "id" does not exist, that row will be added
- * If an "id" is not given, then the next value in the sequence will be used and automatically added to the document.
+    + If the given "id" primary key already exists, it will update that row with the given document
+    + If the given "id" does not exist, that row will be added
+ * If an "id" is not given, then a new UUID value will be generated and automatically added to the document and set as the primary key.
  * The "search" column will automatically be updated with the latest relevant FTS values based on the given document.
  * The "updated_at" column will automatically be updated to the timestamp at the time save is run.
  * The function will return a copy of the jsonb document that is given if successfully stored.
