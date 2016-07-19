@@ -3,20 +3,20 @@ EXTVERSION = $(shell grep default_version $(EXTENSION).control | \
                sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
 
 PG_CONFIG = pg_config
-PG94 = $(shell $(PG_CONFIG) --version | egrep " 8\.| 9\.0| 9\.1| 9\.2| 9\.3" > /dev/null && echo no || echo yes)
+PG95 = $(shell $(PG_CONFIG) --version | egrep " 8\.| 9\.0| 9\.1| 9\.2| 9\.3| 9\.4" > /dev/null && echo no || echo yes)
 
-ifeq ($(PG94),yes)
+ifeq ($(PG95),yes)
 #DOCS = $(wildcard doc/*.md)
 all: sql/$(EXTENSION)--$(EXTVERSION).sql
 
 # Use plpgsql files
 sql/$(EXTENSION)--$(EXTVERSION).sql: sql/functions/*.sql
 	cat $^ > $@
-DATA = $(wildcard plpgsql/updates/*--*.sql) sql/$(EXTENSION)--$(EXTVERSION).sql
+DATA = $(wildcard updates/*--*.sql) sql/$(EXTENSION)--$(EXTVERSION).sql
 
 EXTRA_CLEAN = sql/$(EXTENSION)--$(EXTVERSION).sql
 else
-$(error Minimum version of PostgreSQL required is 9.4.0)
+$(error Minimum version of PostgreSQL required is 9.5.0)
 endif
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)

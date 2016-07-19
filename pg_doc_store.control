@@ -1,4 +1,4 @@
-default_version = '0.1.0'
+default_version = '0.2.0'
 comment = 'Extension to give a document storage api to postgres'
 relocatable = false
 requires = 'pgcrypto'

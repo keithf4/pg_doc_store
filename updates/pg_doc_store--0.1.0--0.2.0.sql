@@ -1,4 +1,11 @@
-CREATE FUNCTION save_document(p_tablename text, p_doc_string jsonb) RETURNS jsonb
+-- Extension now requires PostgreSQL 9.5.
+-- Changed from using exception trap to using INSERT ON CONFLICT (upsert) feature introduced in PostgreSQL 9.5. Concurrent inserts & updates to the same document ID should now be transactionally safe from race conditions.
+-- Changed to using new json_set() function introduced in 9.5. Allows easier adding of automatic id value to a given document if one is not given to save_document().
+-- Fixed bug where updated_at column was not being properly set when a document is updated.
+-- Changed check_version() function to work with non-release versions of PostgreSQL. Not actually used in extension yet.
+
+
+CREATE OR REPLACE FUNCTION save_document(p_tablename text, p_doc_string jsonb) RETURNS jsonb
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -72,6 +79,49 @@ ELSE -- id not contained in given json string
     RETURN v_doc_id;
 
 END IF;
+
+END
+$$;
+
+
+/*
+ * Check PostgreSQL version number. Parameter must be full 3 point version.
+ * Returns true if current version is greater than or equal to the parameter given.
+ */
+CREATE OR REPLACE FUNCTION check_version(p_check_version text) RETURNS boolean
+    LANGUAGE plpgsql STABLE
+    AS $$
+DECLARE
+
+v_check_version     text[];
+v_current_version   text[] := string_to_array(current_setting('server_version'), '.');
+ 
+BEGIN
+
+v_check_version := string_to_array(p_check_version, '.');
+
+IF v_current_version[1]::int > v_check_version[1]::int THEN
+    RETURN true;
+END IF;
+IF v_current_version[1]::int = v_check_version[1]::int THEN
+    IF substring(v_current_version[2] from 'beta') IS NOT NULL 
+        OR substring(v_current_version[2] from 'alpha') IS NOT NULL 
+        OR substring(v_current_version[2] from 'rc') IS NOT NULL 
+    THEN
+        -- You're running a test version. You're on your own if things fail.
+        RETURN true;
+    END IF;
+    IF v_current_version[2]::int > v_check_version[2]::int THEN
+        RETURN true;
+    END IF;
+    IF v_current_version[2]::int = v_check_version[2]::int THEN
+        IF v_current_version[3]::int >= v_check_version[3]::int THEN
+            RETURN true;
+        END IF; -- 0.0.x
+    END IF; -- 0.x.0
+END IF; -- x.0.0
+
+RETURN false;
 
 END
 $$;

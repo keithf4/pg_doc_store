@@ -1,0 +1,6 @@
+0.2.0
+-- Extension now requires PostgreSQL 9.5.
+-- Changed from using exception trap to using INSERT ON CONFLICT (upsert) feature introduced in PostgreSQL 9.5. Concurrent inserts & updates to the same document ID should now be transactionally safe from race conditions.
+-- Changed to using new json_set() function introduced in 9.5. Allows easier adding of automatic id value to a given document if one is not given to save_document().
+-- Fixed bug where updated_at column was not being properly set when a document is updated.
+-- Changed check_version() function to work with non-release versions of PostgreSQL. Not actually used in extension yet.
