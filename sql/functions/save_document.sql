@@ -1,3 +1,11 @@
+/*
+ * Add or update document in given table (MongoDB "save" equivalent)
+ * If given table doesn't exist, create it
+ * If given document id does not exist, create new document with that id
+ * If given document id does exist, update that document
+ * If no document id is given, generate one and create new document
+ * Returns the new document as jsonb. 
+ */
 CREATE FUNCTION save_document(p_tablename text, p_doc_string jsonb) RETURNS jsonb
     LANGUAGE plpgsql
     AS $$
@@ -7,9 +15,7 @@ v_doc           jsonb;
 v_doc_id        jsonb;
 v_id            uuid;
 v_returning     record;
-v_schema        text;
 v_schemaname    text;
-v_table         text;
 v_tablename     text;
 
 BEGIN
@@ -22,19 +28,7 @@ IF jsonb_typeof(p_doc_string) = 'array' THEN
 END IF;
 */
 
-IF position('.' in p_tablename) > 0 THEN
-    v_schema := split_part(p_tablename, '.', 1); 
-    v_table := split_part(p_tablename, '.', 2);
-ELSE
-    RAISE EXCEPTION 'tablename must be schema qualified';
-END IF;
-
-
-SELECT schemaname, tablename INTO v_schemaname, v_tablename FROM pg_catalog.pg_tables WHERE schemaname = v_schema AND tablename = v_table;
-
-IF v_tablename IS NULL THEN
-    SELECT schemaname, tablename INTO v_schemaname, v_tablename FROM @extschema@.create_document(p_tablename);
-END IF;
+SELECT schemaname, tablename INTO v_schemaname, v_tablename FROM @extschema@.create_document(p_tablename);
 
 v_doc := p_doc_string;
 
@@ -75,5 +69,4 @@ END IF;
 
 END
 $$;
-
 

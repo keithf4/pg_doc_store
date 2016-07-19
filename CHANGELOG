@@ -1,3 +1,7 @@
+0.2.1
+-- Allow create_document() to work even if given table already exists. Outputs the same as if it had created it.
+
+
 0.2.0
 -- Extension now requires PostgreSQL 9.5.
 -- Changed from using exception trap to using INSERT ON CONFLICT (upsert) feature introduced in PostgreSQL 9.5. Concurrent inserts & updates to the same document ID should now be transactionally safe from race conditions.

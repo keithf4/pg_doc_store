@@ -34,6 +34,7 @@ And then while logged into the database run
     + *created_at* - a timestamp of when the document was created
     + *updated_at* - a timestamp that is updated whenever the document is updated using the function interfaces
  * Returns the schema & tablename of the document table it created
+ * If the given table already exists, it will still return the same and throw no errors.
  
 ```
                         Table "public.mycollection"
